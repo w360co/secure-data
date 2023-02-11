@@ -1,0 +1,48 @@
+{
+    "name": "w360/image-storage",
+    "description": "Library for uploads images multi sizes",
+    "keywords": [
+        "w360",
+        "image-storage"
+    ],
+    "homepage": "https://github.com/w360/image-storage",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Elbert Tous",
+            "email": "elbertjose@hotmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require-dev": {
+        "orchestra/testbench": "^7.22"
+    },
+    "autoload": {
+        "psr-4": {
+            "W360\\ImageStorage\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "W360\\ImageStorage\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "W360\\ImageStorage\\ImageStorageServiceProvider"
+            ],
+            "aliases": {
+                "ImageStorage": "W360\\ImageStorage\\ImageStorageFacade"
+            }
+        }
+    }
+}
