@@ -3,6 +3,7 @@
 namespace W360\ImageStorage;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class ImageStorageServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,32 @@ class ImageStorageServiceProvider extends ServiceProvider
         // Register the main class to use with the facade
         $this->app->singleton('imageSt', function () {
             return new ImageService;
+        });
+
+        $this->callAfterResolving('blade.compiler', function (BladeCompiler $bladeCompiler) {
+            $this->registerBladeExtensions($bladeCompiler);
+        });
+    }
+
+    /**
+     * @param $model
+     * @return bool
+     */
+    public static function bladeMethodWrapper($model)
+    {
+        return isset($model->images) && is_array($model->images) ? $model->images()->count() > 0 : isset($model->images->name);
+    }
+
+    /**
+     * @param $bladeCompiler
+     */
+    protected function registerBladeExtensions($bladeCompiler)
+    {
+        $bladeCompiler->directive('hasimage', function ($arguments) {
+            return "<?php if(\\W360\\ImageStorage\\ImageStorageServiceProvider::bladeMethodWrapper('hasImage', {$arguments})): ?>";
+        });
+        $bladeCompiler->directive('endhasimage', function () {
+            return '<?php endif; ?>';
         });
     }
 
