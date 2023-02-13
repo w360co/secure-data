@@ -1,6 +1,11 @@
-# W360 SUPPORT MODULE
+# W360 Image Storage
 
 Base module for w360 projects using react
+
+<a href="https://github.com/w360/image-storage/actions"><img src="https://github.com/w360/image-storage/actions/workflows/laravel-test.yml/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/dt/w360/image-storage" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/v/w360/image-storage" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/l/w360/image-storage" alt="License"></a>
 
 # Table of Contents
 <!-- TOC -->
