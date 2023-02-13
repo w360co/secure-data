@@ -2,7 +2,7 @@
 
 Base module for w360 projects using react
 
-<a href="https://github.com/w360/image-storage/actions"><img src="https://github.com/w360/image-storage/actions/workflows/laravel-test.yml/badge.svg" alt="Build Status"></a>
+[![runtest](https://github.com/w360co/image-storage/actions/workflows/laravel-test.yml/badge.svg?branch=main)](https://github.com/w360co/image-storage/actions/workflows/laravel-test.yml)
 <a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/dt/w360/image-storage" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/v/w360/image-storage" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/l/w360/image-storage" alt="License"></a>
