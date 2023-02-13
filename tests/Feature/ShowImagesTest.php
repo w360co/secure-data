@@ -7,6 +7,15 @@ use W360\ImageStorage\Tests\TestCase;
 class ShowImagesTest extends TestCase
 {
 
+
+    /**
+     * @test
+     */
+    public function get_image_default(){
+        $img = image('myImage.png', 'local$./[pass&88a7q9# Oi-k', 'sx');
+        $this->assertEquals('http://localhost/storage/localpass88a7q9-oi-k/sx/myImage.png', $img, 'Url Image thumbnail Fail:'.$img);
+    }
+
     /**
      * @test
      */
