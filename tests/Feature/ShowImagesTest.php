@@ -7,21 +7,22 @@ use W360\ImageStorage\Tests\TestCase;
 class ShowImagesTest extends TestCase
 {
 
-
     /**
      * @test
      */
     public function get_image_default(){
-        $img = image('myImage.png', 'local$./[pass&88a7q9# Oi-k', 'sx');
-        $this->assertEquals('http://localhost/storage/localpass88a7q9-oi-k/sx/myImage.png', $img, 'Url Image thumbnail Fail:'.$img);
+        $model = null;
+        $img = image_model($model, 'xs');
+        echo $img;
+        $this->assertEquals('https://via.placeholder.com/300x300.png', $img, 'Url Image thumbnail Fail:'.$img);
     }
 
     /**
      * @test
      */
     public function get_image_from_storage_with_characters_not_allowed_and_undefined_size(){
-        $img = image('myImage.png', 'local$./[pass&88a7q9# Oi-k', 'sx');
-        $this->assertEquals('http://localhost/storage/localpass88a7q9-oi-k/sx/myImage.png', $img, 'Url Image thumbnail Fail:'.$img);
+        $img = image('myImage.png', 'local$./[pass&88a7q9# Oi-k', 'xs');
+        $this->assertEquals('http://localhost/storage/localpass88a7q9-oi-k/xs/myImage.png', $img, 'Url Image thumbnail Fail:'.$img);
     }
 
     /**
