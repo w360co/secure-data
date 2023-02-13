@@ -11,9 +11,9 @@ class ImageStorageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       $this->registerResources();
-       $this->registerPublishing();
-   }
+        $this->registerResources();
+        $this->registerPublishing();
+    }
 
     /**
      * Register the application services.
@@ -21,7 +21,7 @@ class ImageStorageServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'image-storage');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'image-storage');
 
 
         // Register the main class to use with the facade
@@ -35,7 +35,7 @@ class ImageStorageServiceProvider extends ServiceProvider
      */
     private function registerResources()
     {
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 
     /**
@@ -45,7 +45,7 @@ class ImageStorageServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('image-storage.php'),
+                __DIR__ . '/../config/config.php' => config_path('image-storage.php'),
             ], 'config');
 
             $this->publishes([
