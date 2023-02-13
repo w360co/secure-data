@@ -1,7 +1,7 @@
 {
     "name": "w360/image-storage",
     "description": "Library for uploads images multi sizes",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "keywords": [
         "w360",
         "image-storage"
