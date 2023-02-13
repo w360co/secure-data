@@ -60,23 +60,23 @@ class User extends Authenticatable
 ```html
 show uploaded image 
 @php($photo = Auth::user()->photo)
+@if($photo)
 <img src="{{ image($photo->name, $photo->storage) }}" alt="image uploaded with w360/image-storage" />
 get xs image
 <img src="{{ image($photo->name, $photo->storage, 'xs') }}" alt="image uploaded with w360/image-storage xs size" />
 ...
 get xxl image
 <img src="{{ image($photo->name, $photo->storage, 'xxl') }}" alt="image uploaded with w360/image-storage xxl size" />
+@endif
 ```
 ## Features
 
-- Configure Laravel with React
-- Multi Language Support
-- Axios for React Configuration and Request Interception
+- Allows uploading images to storage easily
+- Allows you to generate multiple sizes of an image with its corresponding quality settings
 
 ## Libraries
 
 - Image Intervention https://image.intervention.io/v2/introduction/installation
-- Internationalization i18next https://www.i18next.com/
 
 ##  License
 
