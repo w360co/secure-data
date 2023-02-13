@@ -3,9 +3,9 @@
 Base module for w360 projects using react
 
 [![runtest](https://github.com/w360co/image-storage/actions/workflows/laravel-test.yml/badge.svg?branch=main)](https://github.com/w360co/image-storage/actions/workflows/laravel-test.yml)
-<a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/dt/w360/image-storage" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/v/w360/image-storage" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/w360/image-storage"><img src="https://img.shields.io/packagist/l/w360/image-storage" alt="License"></a>
+[![Total Downloads](https://img.shields.io/packagist/dt/w360/image-storage)](https://packagist.org/packages/w360/image-storage)
+[![Latest Stable Version](https://img.shields.io/packagist/v/w360/image-storage)](https://packagist.org/packages/w360/image-storage)
+[![License](https://img.shields.io/packagist/l/w360/image-storage)](https://packagist.org/packages/w360/image-storage)
 
 # Table of Contents
 <!-- TOC -->
@@ -15,7 +15,7 @@ Base module for w360 projects using react
 
 ## Installation
 
-    > composer required w360/image-storage
+    > composer require w360/image-storage
 
 ## Examples
 - Example of use uploading a profile photo for a user
