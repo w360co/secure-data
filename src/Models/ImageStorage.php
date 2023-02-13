@@ -11,6 +11,8 @@ class ImageStorage extends Model
 
       protected $guarded = [];
 
-
-
+      public function model()
+      {
+         return $this->morphTo();
+      }
 }

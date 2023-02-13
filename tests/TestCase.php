@@ -49,7 +49,7 @@ abstract class TestCase extends BaseTestCase
             'driver' => 'sqlite',
             'database' => ':memory:',
         ]);
-
+        $app->useStoragePath(__DIR__ . '/../storage/');
 
     }
 

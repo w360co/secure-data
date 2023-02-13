@@ -25,22 +25,18 @@ class ImageService
 
         $img = $manager->make($image->getRealPath());
         $disk->put($storage . "/" . $fileName, $img->encode('webp'));
-        $this->sizesImages($fileName, $disk, $storage, function ($sizePath, $width, $height, $quality) use ($img) {
-            $img->fit($width, $height)->encode('webp', $quality);
-            $img->save($sizePath);
+        $this->sizesImages($fileName, $disk, $storage, function ($sizePath, $width, $height, $quality) use ($img, $disk) {
+            $image = $img->fit($width, $height)->encode('webp', $quality);
+            $disk->put($sizePath, $image);
         });
 
-        $imageStore = ImageStorage::firstOrCreate([
+        return ImageStorage::firstOrCreate([
             'name' => $fileName,
             'storage' => $storage,
             'author' => (Auth::check() ? Auth::user()->username : null),
             'model_type' => get_class($model),
             'model_id' => $model->id
         ]);
-
-        $model->image_storage_id = $imageStore->id;
-
-        return $imageStore;
     }
 
 

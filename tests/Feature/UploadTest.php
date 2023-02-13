@@ -7,8 +7,10 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use W360\ImageStorage\Facades\ImageST;
-use W360\ImageStorage\Models\UserTest;
+use W360\ImageStorage\Models\ImageStorage;
+use W360\ImageStorage\Models\User;
 use W360\ImageStorage\Tests\TestCase;
 
 class UploadTest extends TestCase
@@ -19,24 +21,38 @@ class UploadTest extends TestCase
     /**
      * @test
      */
+    public function save_image_in_database(){
+        $image = factory(ImageStorage::class)->create();
+        $this->assertCount(1, ImageStorage::all(), 'Database Images Is Empty');
+    }
+
+    /**
+     * @test
+     */
     public function upload_and_save_image_to_storage(){
 
-        $storage = 'avatars';
-        Storage::fake($storage);
+       $storage = 'avatars';
+       Storage::fake($storage);
 
-        $upload = UploadedFile::fake()->image('avatar.jpg');
-        $userTest = factory(UserTest::class)->create();
-        $image = ImageST::save($upload, $storage, $userTest);
-        $userTest->save();
+       $upload = UploadedFile::fake()->image('avatar.jpg');
+       $userTest = factory(User::class)->create();
+       $image = ImageST::save($upload, $storage, $userTest);
 
-        Storage::disk($image->storage)->assertExists($image->name);
-        $this->assertEquals($userTest->id, $image->model_id,'Id Model Test Not Equal Model Id' );
-        $this->assertEquals($userTest->image_storage_id, $image->id, 'Id Ralation Image Storage Id Not Equal To Image Store Id');
+
+       $photo = $userTest->photo;
+
+       $this->assertEquals($userTest->id, $image->model_id,'No save model id' );
+       $this->assertEquals(get_class($userTest), $image->model_type,'No save model type' );
+       $this->assertEquals($photo->name, $image->name,'No save image name' );
+
+       Storage::disk($photo->storage)->assertExists($photo->storage."/".$photo->name);
+       $assetUrl = image($photo->name, $photo->storage);
+       $expectedUrl = URL::to('/').Storage::disk($photo->storage)->url($photo->storage."/".$photo->name);
+       $this->assertEquals($expectedUrl, $assetUrl,'Url get image not found' );
+       $this->assertEquals($expectedUrl, $assetUrl,'Url get image not found' );
+       $this->assertTrue(true);
+
     }
 
-
-    public function upload_and_save_array_of_images_to_storage(){
-        $this->assertTrue(true);
-    }
 
 }

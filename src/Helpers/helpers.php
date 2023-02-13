@@ -16,6 +16,6 @@ if (!function_exists('image')) {
     function image($name, string $storage = 'default', string $size = '', bool $secure = null): string
     {
         $disk = Str::slug($storage);
-        return URL::asset(str_replace('//', '/', $disk . "/" . $size . "/" . $name), $secure);
+        return URL::asset(str_replace('//', '/', 'storage/'. $disk . "/" . $size . "/" . $name), $secure);
     }
 }
