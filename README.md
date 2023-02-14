@@ -36,7 +36,7 @@ class TestController extends Controller
             $storage = 'photos';
             $photo = $request->photo;
             $user = User::findOrFail(Auth::user()->id);
-            ImageST::save($photo, $storage, $user);
+            ImageST::updateOrCreate($photo, $storage, $user);
         }
     }
 }
