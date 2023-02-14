@@ -8,15 +8,22 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use W360\ImageStorage\Models\ImageStorage;
 
+/**
+ * @class ImageService
+ * @author Elbert Tous <elbertjose@hotmail.com>
+ * @version 2.2.0
+ */
 class ImageService
 {
+
+
     /**
      * @param UploadedFile $image
      * @param $storage
-     * @param $model
+     * @param \Closure $function
      * @return mixed
      */
-    public function save(UploadedFile $image, $storage, &$model)
+    private function upload(UploadedFile $image, $storage, \Closure $function)
     {
         $disk = Storage::disk($storage);
         $manager = new ImageManager();
@@ -30,32 +37,73 @@ class ImageService
             $disk->put($sizePath, $image);
         });
 
-        return ImageStorage::firstOrCreate([
-            'name' => $fileName,
-            'storage' => $storage,
-            'author' => (Auth::check() ? Auth::user()->username : null),
-            'model_type' => get_class($model),
-            'model_id' => $model->id
-        ]);
+        return $function($fileName, $storage);
     }
 
+
+    /**
+     * @param UploadedFile $image
+     * @param $storage
+     * @param $model
+     * @return mixed
+     */
+    public function create(UploadedFile $image, $storage, &$model)
+    {
+        return $this->upload($image, $storage, function($fileName, $storage) use ($model) {
+            return ImageStorage::firstOrCreate([
+                'name' => $fileName,
+                'storage' => $storage,
+                'author' => (Auth::check() ? Auth::user()->username : null),
+                'model_type' => get_class($model),
+                'model_id' => $model->id
+            ]);
+        });
+    }
+
+    /**
+     * @param UploadedFile $image
+     * @param $storage
+     * @param $model
+     * @return mixed
+     */
+    public function updateOrCreate(UploadedFile $image, $storage, &$model)
+    {
+        return $this->upload($image, $storage, function($fileName, $storage) use ($model) {
+            $delete = $this->delete($model);
+            if($delete) {
+                return ImageStorage::updateOrCreate([
+                    'model_type' => get_class($model),
+                    'model_id' => $model->id,
+                    'storage' => $storage
+                ], [
+                    'name' => $fileName,
+                    'storage' => $storage,
+                    'author' => (Auth::check() ? Auth::user()->username : null),
+                    'model_type' => get_class($model),
+                    'model_id' => $model->id
+                ]);
+            }
+        });
+    }
 
     /**
      *
      * @param int $id
      * @return bool
      */
-    public function delete($id)
+    public function delete($model)
     {
-        $image = ImageStorage::where('id', $id)->first();
-        if ($image) {
-            $disk = Storage::disk($image->storage);
-            $paths = [];
-            $this->sizesImages($image->name, $disk, $image->storage, function ($sizePath) use ($paths) {
-                $paths[] = $sizePath;
-            });
-            if (!empty($paths))
-                return $disk->delete($paths);
+        if(isset($model->storage) && isset($model->name)) {
+            $image = ImageStorage::where('model_id', $model->id)->where('model_type', get_class($model))->first();
+            if ($image) {
+                $disk = Storage::disk($image->storage);
+                $paths = [];
+                $this->sizesImages($image->name, $disk, $image->storage, function ($sizePath) use ($paths) {
+                    $paths[] = $sizePath;
+                });
+                if (!empty($paths))
+                    return $disk->delete($paths);
+            }
         }
         return true;
     }

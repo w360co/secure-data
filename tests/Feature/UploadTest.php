@@ -29,14 +29,14 @@ class UploadTest extends TestCase
     /**
      * @test
      */
-    public function upload_and_save_image_to_storage(){
+    public function upload_and_create_new_image_to_storage(){
 
        $storage = 'avatars';
        Storage::fake($storage);
 
        $upload = UploadedFile::fake()->image('avatar.jpg');
        $userTest = factory(User::class)->create();
-       $image = ImageST::save($upload, $storage, $userTest);
+       $image = ImageST::create($upload, $storage, $userTest);
 
 
        $photo = $userTest->photo;
@@ -51,6 +51,33 @@ class UploadTest extends TestCase
        $this->assertEquals($expectedUrl, $assetUrl,'Url get image not found' );
        $this->assertEquals($expectedUrl, $assetUrl,'Url get image not found' );
        $this->assertTrue(true);
+
+    }
+
+    /**
+     * @test
+     */
+    public function upload_and_update_or_create_image_to_storage(){
+
+        $storage = 'avatars';
+        Storage::fake($storage);
+
+        $upload = UploadedFile::fake()->image('avatar.jpg');
+        $userTest = factory(User::class)->create();
+        $image = ImageST::updateOrCreate($upload, $storage, $userTest);
+
+        $photo = $userTest->photo;
+
+        $this->assertEquals($userTest->id, $image->model_id,'No save model id' );
+        $this->assertEquals(get_class($userTest), $image->model_type,'No save model type' );
+        $this->assertEquals($photo->name, $image->name,'No save image name' );
+
+        Storage::disk($photo->storage)->assertExists($photo->storage."/".$photo->name);
+        $assetUrl = image($photo->name, $photo->storage);
+        $expectedUrl = URL::to('/').Storage::disk($photo->storage)->url($photo->storage."/".$photo->name);
+        $this->assertEquals($expectedUrl, $assetUrl,'Url get image not found' );
+        $this->assertEquals($expectedUrl, $assetUrl,'Url get image not found' );
+        $this->assertTrue(true);
 
     }
 
