@@ -9,7 +9,10 @@ Library to Encrypt Database Fields in Mysql using Advanced Encryption Standard (
 
 # Table of Contents
 <!-- TOC -->
+- [Installation](#Installation)
+- [Examples](#Examples)
 - [Features](#Features)
+- [Contributors](#Contributors)
 - [License](#License)
 <!-- /TOC -->
 
