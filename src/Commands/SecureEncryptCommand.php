@@ -21,20 +21,25 @@ class SecureEncryptCommand extends Command
     protected $description = 'Encrypt secure fields of a model';
 
 
+    /**
+     * @return int
+     */
     public function handle(): int
     {
-
         $model = $this->getModel();
         if ($model === false) {
             return self::INVALID;
         }
 
-
         $this->encryptSecureFields($model);
-
         return self::SUCCESS;
     }
 
+    /**
+     * Gets the name of the model class required and entered by parameter
+     *
+     * @return false|SecureDataEncrypted
+     */
     protected function getModel()
     {
         /** @var class-string<\W360\SecureData\Contracts\SecureDataEncrypted> $modelClass */
@@ -48,7 +53,7 @@ class SecureEncryptCommand extends Command
 
         $newClass = (new $modelClass());
 
-        if (! $newClass instanceof SecureDataEncrypted) {
+        if (!$newClass instanceof SecureDataEncrypted) {
             $this->error("Model {$modelClass} does not implement CipherSweetEncrypted");
             echo "Model {$modelClass} does not implement CipherSweetEncrypted";
 
@@ -58,6 +63,11 @@ class SecureEncryptCommand extends Command
         return $newClass;
     }
 
+    /**
+     * encrypts the fields identified as safe from a table with existing records prior to the installation of the package
+     *
+     * @param $model
+     */
     protected function encryptSecureFields($model)
     {
         if (method_exists($model, 'getSecureAttributes')) {
@@ -70,10 +80,10 @@ class SecureEncryptCommand extends Command
                 ->orderBy($model->getKeyName(), $sort)
                 ->each(function (object $obj) use ($model, &$updatedRows) {
 
-                    $attributes = $model->getSecureEncryptAttributes((array) $obj);
+                    $attributes = $model->getSecureEncryptAttributes((array)$obj);
                     DB::table($model->getTable())
-                            ->where($model->getKeyName(), $obj->{$model->getKeyName()})
-                            ->update($attributes);
+                        ->where($model->getKeyName(), $obj->{$model->getKeyName()})
+                        ->update($attributes);
 
                     $updatedRows++;
 
