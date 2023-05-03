@@ -1,11 +1,11 @@
-# W360 Image Storage
+# W360 Secure Data
 
-Base module for w360 projects using react
+Library to Encrypt Database Fields in Mysql using Advanced Encryption Standard (AES) and Data Encryption Standard (DES)
 
-[![runtest](https://github.com/w360co/image-storage/actions/workflows/laravel-test.yml/badge.svg?branch=main)](https://github.com/w360co/image-storage/actions/workflows/laravel-test.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/w360/image-storage)](https://packagist.org/packages/w360/image-storage)
-[![Latest Stable Version](https://img.shields.io/packagist/v/w360/image-storage)](https://packagist.org/packages/w360/image-storage)
-[![License](https://img.shields.io/packagist/l/w360/image-storage)](https://packagist.org/packages/w360/image-storage)
+[![runtest](https://github.com/w360co/secure-date/actions/workflows/laravel-test.yml/badge.svg?branch=main)](https://github.com/w360co/secure-date/actions/workflows/laravel-test.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/w360/secure-date)](https://packagist.org/packages/w360/secure-date)
+[![Latest Stable Version](https://img.shields.io/packagist/v/w360/secure-date)](https://packagist.org/packages/w360/secure-date)
+[![License](https://img.shields.io/packagist/l/w360/secure-date)](https://packagist.org/packages/w360/secure-date)
 
 # Table of Contents
 <!-- TOC -->
@@ -15,73 +15,71 @@ Base module for w360 projects using react
 
 ## Installation
 
-    > composer require w360/image-storage
+    > composer require w360/secure-data
 
 ## Examples
-- Example of use uploading a profile photo for a user
-```PHP
-<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use W360\ImageStorage\Facades\ImageST;
-
-class TestController extends Controller
-{
-    private function saveProfile(Request $request){
-        if($request->hasFile('photo') and Auth::check()){
-            $storage = 'photos';
-            $photo = $request->photo;
-            $user = User::findOrFail(Auth::user()->id);
-            ImageST::updateOrCreate($photo, $storage, $user);
-        }
-    }
-}
-```
-
+- Example of use
 ```PHP
 <?php
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use W360\ImageStorage\Models\ImageStorage;
+use W360\SecureData\Traits\HasEncryptedFields;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasImages;
+    use HasEncryptedFields;
+
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     *@var array
+     */
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'email',
+        'identifier',
+        'salary',
+        'status',
+        'password'
+    ];
     
-    public function getPhotoAttribute(){
-        return $this->images()->first();
-    } 
+    /**
+     * The attributes that should be encrypted.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'email' => Secure::class,
+        'identifier' => Secure::class,
+        'first_name' => Secure::class,
+        'last_name' => Secure::class,
+        'salary' => Secure::class,
+        'status' => Secure::class,
+    ];
+    
 }
 ```
-```html
-show uploaded image 
-@php($photo = Auth::user()->photo)
-@if($photo)
-<img src="{{ image($photo->name, $photo->storage) }}" alt="image uploaded with w360/image-storage" />
-get xs image
-<img src="{{ image($photo->name, $photo->storage, 'xs') }}" alt="image uploaded with w360/image-storage xs size" />
-...
-get xxl image
-<img src="{{ image($photo->name, $photo->storage, 'xxl') }}" alt="image uploaded with w360/image-storage xxl size" />
-@endif
-```
+
 ## Features
 
-- Allows uploading images to storage easily
-- Allows you to generate multiple sizes of an image with its corresponding quality settings
+- It allows to perform SQL queries encrypting and decrypting fields in a natural way only using MySql encryption methods
 
-## Libraries
+## Contributors
 
-- Image Intervention https://image.intervention.io/v2/introduction/installation
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ##  License
 

@@ -5,12 +5,12 @@ namespace Database\Factories;
 
 use Faker\Generator;
 use Illuminate\Support\Str;
-use W360\SecureData\Models\User;
+use W360\SecureData\Models\Admin;
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 
-$factory->define(User::class, function (Generator $faker) {
+$factory->define(Admin::class, function (Generator $faker) {
     return [
         'first_name' => $faker->name,
         'last_name' => $faker->lastName,
@@ -24,7 +24,6 @@ $factory->define(User::class, function (Generator $faker) {
     ];
 });
 
-
-$factory->state(User::class, 'unverified', [
+$factory->state(Admin::class, 'unverified', [
     'email_verified_at' => null
 ]);

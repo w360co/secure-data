@@ -1,11 +1,11 @@
 <?php
 
-namespace W360\ImageStorage\Facades;
+namespace W360\SecureData\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \W360\ImageStorage\Facades\Image
+ * @see \W360\SecureData\Facades\Image
  */
 class ImageST extends Facade
 {

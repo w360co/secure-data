@@ -1,19 +1,20 @@
 {
-    "name": "w360/image-storage",
-    "description": "Library for uploads images multi sizes",
+    "name": "w360/secure-data",
+    "description": "Library to Encrypt Database Fields in Mysql using Advanced Encryption Standard (AES) and Data Encryption Standard (DES)",
     "version": "2.0.2",
     "keywords": [
         "w360",
-        "image-storage"
+        "secure-data"
     ],
-    "homepage": "https://github.com/w360/image-storage",
+    "homepage": "https://github.com/w360/secure-data",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "Elbert Tous",
-            "email": "elbertjose@hotmail.com",
-            "role": "Developer"
+            "email": "contacto@lotous.com.co",
+            "role": "Developer",
+            "homepage": "https://lotous.com.co"
         }
     ],
     "require-dev": {
@@ -22,16 +23,13 @@
     },
     "autoload": {
         "psr-4": {
-            "W360\\ImageStorage\\": "src",
+            "W360\\SecureData\\": "src",
             "Database\\Factories\\": "database/factories/"
-        },
-        "files": [
-            "src/Helpers/helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "W360\\ImageStorage\\Tests\\": "tests"
+            "W360\\SecureData\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -44,14 +42,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "W360\\ImageStorage\\ImageStorageServiceProvider"
-            ],
-            "aliases": {
-                "ImageST": "W360\\ImageStorage\\Facades\\ImageST"
-            }
+                "W360\\SecureData\\SecureDataServiceProvider"
+            ]
         }
-    },
-    "require": {
-        "intervention/image": "^2.7"
     }
 }

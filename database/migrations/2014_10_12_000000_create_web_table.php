@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('webs', function (Blueprint $table) {
             $table->id();
-            $table->binary('first_name');
-            $table->binary('last_name');
-            $table->binary('email');
-            $table->binary('identifier');
-            $table->binary('salary');
+            $table->binary('name');
+            $table->binary('url');
             $table->binary('status');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('admin_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->timestamps();
         });
     }

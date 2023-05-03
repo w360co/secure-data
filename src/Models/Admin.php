@@ -2,12 +2,13 @@
 
 namespace W360\SecureData\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as UserLaravel;
 use W360\SecureData\Casts\Secure;
 use W360\SecureData\Contracts\SecureDataEncrypted;
 use W360\SecureData\Traits\HasEncryptedFields;
 
-class User extends UserLaravel implements SecureDataEncrypted
+class Admin extends UserLaravel implements SecureDataEncrypted
 {
     use HasEncryptedFields;
 
@@ -15,7 +16,7 @@ class User extends UserLaravel implements SecureDataEncrypted
     /**
      * The attributes that are mass assignable.
      *
-     *@var array
+     * @var array
      */
     protected $fillable = [
         'first_name',
@@ -57,9 +58,13 @@ class User extends UserLaravel implements SecureDataEncrypted
     /**
      * Get all of the tags for the post.
      */
-    public function admins()
+    public function users()
     {
-        return $this->belongsToMany(Admin::class, 'webs');
+        return $this->belongsToMany(User::class, 'webs')->withPivot([
+            'name',
+            'url',
+            'status'
+        ]);
     }
 
 

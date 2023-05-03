@@ -9,7 +9,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Name
+    |  Encrypt secret key
     |--------------------------------------------------------------------------
     |
     | This value is the name of your application. This value is used when the
@@ -18,12 +18,12 @@ return [
     |
     */
 
-    'storage' => 'default',
+    'secret-key' => env('SECURE_SECRET_KEY', 'aa32b64207e2d1'),
 
 
     /*
     |--------------------------------------------------------------------------
-    | Application Name
+    | Encrypt type (AES or DES)
     |--------------------------------------------------------------------------
     |
     | This value is the name of your application. This value is used when the
@@ -32,50 +32,7 @@ return [
     |
     */
 
-    'default-image' => 'https://via.placeholder.com/{width}x{height}.png',
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Size Names
-    |--------------------------------------------------------------------------
-    |
-    | size names associated to specific width and length values
-    | of the generated images at the moment of being uploaded
-    |
-    */
-
-    'sizes' => [
-        'thumbnail' => [100, 100],
-        'xs' => [300, 300],
-        'sm' => [576, 576],
-        'md' => [768, 768],
-        'lg' => [992, 800],
-        'xl' => [1200, 800],
-        'xxl' => [1400, 900]
-    ],
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Image Quality
-    |--------------------------------------------------------------------------
-    |
-    | image quality in percentage represented with numerical
-    | values 1 to 100 for each of the existing sizes
-    |
-    */
-
-    'quality' => [
-        'thumbnail' => 100,
-        'xs' => 100,
-        'sm' => 100,
-        'md' => 80,
-        'lg' => 75,
-        'xl' => 75,
-        'xxl' => 75
-    ]
-
+    'encrypt-type' => env('SECURE_ENCRYPT_TYPE', 'AES'),
 
 
 

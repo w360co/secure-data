@@ -1,9 +1,10 @@
 <?php
 
-namespace W360\ImageStorage\Tests;
+namespace W360\SecureData\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use W360\ImageStorage\ImageStorageServiceProvider;
+use W360\SecureData\SecureDataServiceProvider;
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -17,8 +18,10 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->withFactories(__DIR__."/../database/factories");
+        //$this->withFactories(__DIR__."/../database/factories");
+        $this->app
+            ->make(EloquentFactory::class)
+            ->load(__DIR__."/../database/factories");
     }
 
 
@@ -31,7 +34,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-           ImageStorageServiceProvider::class
+           SecureDataServiceProvider::class
         ];
     }
 
@@ -43,13 +46,14 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-
-        $app['config']->set('database.default', 'testdb');
-        $app['config']->set('database.connections.testdb', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-        ]);
-        $app->useStoragePath(__DIR__ . '/../storage/');
+       $app['config']->set('database.default', 'mysql');
+       $app['config']->set('database.connections.mysql', [
+            'driver' => 'mysql',
+            'database' => 'test',
+            'username' => 'root',
+            'password' => '',
+            'host' => 'localhost'
+       ]);
 
     }
 
