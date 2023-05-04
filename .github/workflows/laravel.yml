@@ -43,7 +43,6 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
             sudo apt-get install -y mysql-client
-            mysql -u root --password=5FAVMj5IzQA729PD -h 127.0.0.1 -P 3306 -e 'status;'
             mysql --host 127.0.0.1 --port 3306 -uroot -p5FAVMj5IzQA729PD -e "SHOW DATABASES"
 
       - name: Install Dependencies
