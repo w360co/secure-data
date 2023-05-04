@@ -13,7 +13,7 @@ class SecureEncryptCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'secure:encrypt {model} {sort=asc}';
+    protected $signature = 'secure:encrypt {model}';
 
     /**
      * @var string
@@ -72,12 +72,11 @@ class SecureEncryptCommand extends Command
     {
         if (method_exists($model, 'getSecureAttributes')) {
             $updatedRows = 0;
-            $sort = $this->argument('sort');
-
+    
             $this->getOutput()->progressStart(DB::table($model->getTable())->count());
 
             DB::table($model->getTable())
-                ->orderBy($model->getKeyName(), $sort)
+                ->orderBy($model->getKeyName(), 'asc')
                 ->each(function (object $obj) use ($model, &$updatedRows) {
 
                     $attributes = $model->getSecureEncryptAttributes((array)$obj);
