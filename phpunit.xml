@@ -20,7 +20,7 @@
         <env name="SECURE_SECRET_KEY" value="aa32b64207e2d1"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="DB_CONNECTION" value="mysql"/>
-        <env name="DB_HOST" value="mysql"/>
+        <env name="DB_HOST" value="localhost"/>
         <env name="DB_DATABASE" value="test"/>
         <env name="DB_USERNAME" value="user_test"/>
         <env name="DB_PASSWORD" value="123456"/>
