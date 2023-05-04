@@ -43,7 +43,6 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
             sudo apt-get install -y mysql-client
-            mysql --host 127.0.0.1 --port 3306 -uroot -p5FAVMj5IzQA729PD -e "SHOW DATABASES"
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
