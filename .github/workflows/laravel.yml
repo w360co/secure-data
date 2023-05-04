@@ -46,6 +46,7 @@ jobs:
         with:
           mysql version: '8'
           mysql root password: $DB_PASSWORD
+          mysql database: $DB_DATABASE
 
       - name: Verify MySQL connection from host
         run: |
