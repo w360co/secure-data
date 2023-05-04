@@ -32,21 +32,19 @@ jobs:
           coverage: none
 
       - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
-
+        run: sudo service mysql stop
 
       - name: Setup Mysql
         uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          character set server: 'utf8'
-          collation server: 'utf8mb4_unicode_ci'
-          mysql version: ${{ matrix.mysql }}
-          mysql database: 'test'
-          mysql root password: '123456'
-          mysql user: 'user_test'
-          mysql password: '123456'
+          with:
+            mysql version: '8'
+            mysql root password: '123456'
+
+      - name: Verify MySQL connection from host
+          run: |
+            sudo apt-get install -y mysql-client
+            mysql -u root --password=123456 -h 127.0.0.1 -P 3306 -e 'status;'
+            mysql --host 127.0.0.1 --port 3306 -uroot -p123456 -e "SHOW DATABASES"
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
