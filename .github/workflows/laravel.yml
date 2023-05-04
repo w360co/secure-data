@@ -20,6 +20,13 @@ jobs:
           - testbench: 8.*
 
     name: P${{ matrix.php }} - M${{ matrix.mysql }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    env:
+      DB_CONNECTION: mysql
+      DB_PORT: 3306
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: root
+      DB_PASSWORD: "5FAVMj5IzQA729PD"
+      DB_DATABASE: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,11 +45,17 @@ jobs:
         uses: mirromutth/mysql-action@v1.1
         with:
           mysql version: '8'
-          mysql root password: '5FAVMj5IzQA729PD'
+          mysql root password: $DB_PASSWORD
 
       - name: Verify MySQL connection from host
         run: |
             sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL
+          run: |
+            while ! mysqladmin ping --host=127.0.0.1 --password=$DB_PASSWORD --silent; do
+              sleep 1
+            done
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -53,11 +66,4 @@ jobs:
             echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Execute Tests
-        env:
-          DB_CONNECTION: mysql
-          DB_PORT: 3306
-          DB_HOST: 127.0.0.1
-          DB_USERNAME: root
-          DB_PASSWORD: "5FAVMj5IzQA729PD"
-          DB_DATABASE: test
         run: vendor/bin/phpunit
