@@ -40,9 +40,9 @@ jobs:
           collation server: 'utf8mb4_unicode_ci'
           mysql version: ${{ matrix.mysql }}
           mysql database: 'test'
-          mysql root password: ''
-          mysql user: 'root'
-          mysql password: ''
+          mysql root password: '123456'
+          mysql user: 'user_test'
+          mysql password: '123456'
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
