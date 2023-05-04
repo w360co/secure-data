@@ -40,6 +40,10 @@ jobs:
           mysql version: '8'
           mysql root password: '5FAVMj5IzQA729PD'
 
+      - name: Verify MySQL connection from host
+        run: |
+            sudo apt-get install -y mysql-client
+
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
