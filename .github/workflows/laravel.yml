@@ -36,9 +36,9 @@ jobs:
 
       - name: Setup Mysql
         uses: mirromutth/mysql-action@v1.1
-          with:
-            mysql version: '8'
-            mysql root password: '123456'
+        with:
+          mysql version: '8'
+          mysql root password: '123456'
 
       - name: Verify MySQL connection from host
           run: |
