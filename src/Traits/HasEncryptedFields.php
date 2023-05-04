@@ -100,10 +100,9 @@ trait HasEncryptedFields
         return $this->getSecureAttributes( function($secretKey, $encryptType, $key) use ($values) {
             if(array_key_exists($key, $values) && !Binary::checkIs($values[$key])) {
                 return DB::raw('' . $encryptType . '_ENCRYPT("' . $values[$key] . '","' . $secretKey . '")');
-            }elseif(Binary::checkIs($values[$key])){
+            }elseif(array_key_exists($key, $values) && Binary::checkIs($values[$key])){
                 return $values[$key];
             }
-            throw new Exception(' the safe field '.$key.' is not found among the model attributes');
         });
     }
 
@@ -151,7 +150,6 @@ trait HasEncryptedFields
                     $alias = ' as `' . ($as ?? $key) . '`';
                 }
             }
-
             if(!empty($table)) {
                 return DB::raw($encryptType . '_DECRYPT(`' . $table . '`.`' . $key . '`,"' . $secretKey . '")'.$alias);
             } else {
@@ -215,7 +213,7 @@ trait HasEncryptedFields
      *
      * @throws \Illuminate\Database\Eloquent\MassAssignmentException
      */
-    public function fill(array $attributes)
+/**    public function fill(array $attributes)
     {
 
         if (method_exists($this, 'getSecureEncryptAttributes') && !empty($attributes)) {
@@ -224,7 +222,7 @@ trait HasEncryptedFields
         }
 
         return parent::fill($attributes);
-    }
+    } **/
 
 
 

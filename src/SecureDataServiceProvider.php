@@ -36,8 +36,10 @@ class SecureDataServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'secure-data');
+        if ($this->app->environment('local', 'testing')) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        }
     }
-
 
     /**
      * register publishing

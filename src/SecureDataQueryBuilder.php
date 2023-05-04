@@ -84,12 +84,16 @@ class SecureDataQueryBuilder extends Builder
      */
     public function insert(array $values)
     {
+        if (empty($values)) {
+            return true;
+        }
+
         if (method_exists($this->model, 'getSecureEncryptAttributes') && !empty($values)) {
             $values = array_merge($values, $this->model->getSecureEncryptAttributes($values));
         }
+
         return parent::insert($values);
     }
-
 
     /**
      * Update records in the database.
@@ -99,11 +103,19 @@ class SecureDataQueryBuilder extends Builder
      */
     public function update(array $values)
     {
-        if (method_exists($this->model, 'getSecureEncryptAttributes') && !empty($values)) {
-            $values = array_merge($values, $this->model->getSecureEncryptAttributes($values));
-        }
-        return parent::update($values);
+        $this->applyBeforeQueryCallbacks();
+
+        $values = array_filter($this->model->getSecureEncryptAttributes($values), function ($item){
+             return !empty($item);
+        });
+
+        $sql = $this->grammar->compileUpdate($this, $values);
+
+        return $this->connection->update($sql, $this->cleanBindings(
+            $this->grammar->prepareBindingsForUpdate($this->bindings, $values)
+        ));
     }
+
 
     /**
      * @param string[] $columns
@@ -111,7 +123,7 @@ class SecureDataQueryBuilder extends Builder
      */
     protected function prepareSecureSelectDecrypt($columns = ['*'])
     {
-        if (method_exists($this->model, 'getSecureEncryptAttributes') && method_exists($this->model, 'getTableColumns')) {
+        if (method_exists($this->model, 'getSecureSelectDecryptAttributes') && method_exists($this->model, 'getTableColumns')) {
             if ($columns === ['*']) {
                 $columns = $this->model->getTableColumns();
             }
@@ -270,6 +282,8 @@ class SecureDataQueryBuilder extends Builder
         return $this;
     }
 
+
+
     /**
      * Add an "order by" clause to the query.
      *
@@ -304,7 +318,46 @@ class SecureDataQueryBuilder extends Builder
         return $this;
     }
 
+    /**
+     * Insert a new record and get the value of the primary key.
+     *
+     * @param  array  $values
+     * @param  string|null  $sequence
+     * @return int
+     */
+    public function insertGetId(array $values, $sequence = null)
+    {
 
+        $this->applyBeforeQueryCallbacks();
+
+        $values = array_merge($values, $this->model->getSecureEncryptAttributes($values));
+
+        $sql = $this->grammar->compileInsertGetId($this, $values, $sequence);
+
+        $values = $this->cleanBindings($values);
+
+        return $this->processor->processInsertGetId($this, $sql, $values, $sequence);
+    }
+
+
+
+    /**
+     * Add a "group by" clause to the query.
+     *
+     * @param  array|string  ...$groups
+     * @return $this
+     */
+    public function groupBy(...$groups)
+    {
+        foreach ($groups as $group) {
+            $group = $this->model->getSecureSelectDecryptAttribute($group, true);
+            $this->groups = array_merge(
+                (array) $this->groups,
+                Arr::wrap($group)
+            );
+        }
+        return $this;
+    }
 
 
 
