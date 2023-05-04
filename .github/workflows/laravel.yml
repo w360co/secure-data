@@ -52,10 +52,10 @@ jobs:
             sudo apt-get install -y mysql-client
 
       - name: Wait for MySQL
-          run: |
-            while ! mysqladmin ping --host=127.0.0.1 --password=$DB_PASSWORD --silent; do
-              sleep 1
-            done
+        run: |
+          while ! mysqladmin ping --host=127.0.0.1 --password=$DB_PASSWORD --silent; do
+            sleep 1
+          done
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
