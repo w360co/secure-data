@@ -2,6 +2,7 @@
 
 namespace W360\SecureData\Tests;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\DB;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use W360\SecureData\SecureDataServiceProvider;
@@ -40,7 +41,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Get package providers.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      * @return array<int, class-string>
      */
     protected function getPackageProviders($app)
@@ -48,6 +49,28 @@ abstract class TestCase extends BaseTestCase
         return [
             SecureDataServiceProvider::class
         ];
+    }
+
+
+    /**
+     * @param Application $app
+     */
+    public function getEnvironmentSetUp($app)
+    {
+        // import the CreatePostsTable class from the migration
+        include_once __DIR__ . '/../database/migrations/create_users_table.php.stub';
+        // run the up() method of that migration class
+        (new \CreateUsersTable)->up();
+
+        // import the CreatePostsTable class from the migration
+        include_once __DIR__ . '/../database/migrations/create_admins_table.php.stub';
+        // run the up() method of that migration class
+        (new \CreateAdminsTable)->up();
+
+        // import the CreatePostsTable class from the migration
+        include_once __DIR__ . '/../database/migrations/create_webs_table.php.stub';
+        // run the up() method of that migration class
+        (new \CreateWebsTable)->up();
     }
 
 
