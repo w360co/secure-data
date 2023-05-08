@@ -21,7 +21,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->app->make(EloquentFactory::class)->load(__DIR__ . "/../database/factories");
-        $this->artisan('migrate');
     }
 
 
