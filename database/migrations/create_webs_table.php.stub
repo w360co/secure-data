@@ -13,6 +13,7 @@ class CreateWebsTable extends Migration
      */
     public function up()
     {
+        if(Schema::hasTable('webs')) return;
         Schema::create('webs', function (Blueprint $table) {
             $table->id();
             $table->binary('name');
