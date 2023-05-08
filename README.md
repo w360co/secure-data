@@ -3,9 +3,9 @@
 Library to Encrypt Database Fields in Mysql using Advanced Encryption Standard (AES) and Data Encryption Standard (DES)
 
 [![runtest](https://github.com/w360co/secure-data/actions/workflows/laravel.yml/badge.svg)](https://github.com/w360co/secure-data/actions/workflows/laravel.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/w360/secure-date)](https://packagist.org/packages/w360/secure-date)
-[![Latest Stable Version](https://img.shields.io/packagist/v/w360/secure-date)](https://packagist.org/packages/w360/secure-date)
-[![License](https://img.shields.io/packagist/l/w360/secure-date)](https://packagist.org/packages/w360/secure-date)
+[![Total Downloads](https://img.shields.io/packagist/dt/w360/secure-data)](https://packagist.org/packages/w360/secure-date)
+[![Latest Stable Version](https://img.shields.io/packagist/v/w360/secure-data)](https://packagist.org/packages/w360/secure-date)
+[![License](https://img.shields.io/packagist/l/w360/secure-data)](https://packagist.org/packages/w360/secure-date)
 
 # Table of Contents
 <!-- TOC -->
