@@ -3,7 +3,6 @@
 namespace W360\SecureData\Tests\Feature;
 
 use Faker\Factory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use W360\SecureData\Models\Admin;
 use W360\SecureData\Models\User;
@@ -12,7 +11,6 @@ use W360\SecureData\Tests\TestCase;
 
 class DatabaseTest extends TestCase
 {
-    use RefreshDatabase;
 
     /**
      * @test
