@@ -1,7 +1,7 @@
 {
     "name": "w360/secure-data",
     "description": "Library to Encrypt Database Fields in Mysql using Advanced Encryption Standard (AES) and Data Encryption Standard (DES)",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "keywords": [
         "w360",
         "secure-data"

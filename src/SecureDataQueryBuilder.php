@@ -105,7 +105,7 @@ class SecureDataQueryBuilder extends Builder
     {
         $this->applyBeforeQueryCallbacks();
 
-        $values = array_filter($this->model->getSecureEncryptAttributes($values), function ($item){
+        $values = array_filter(array_merge($values, $this->model->getSecureEncryptAttributes($values)), function ($item){
              return !empty($item);
         });
 
@@ -234,6 +234,11 @@ class SecureDataQueryBuilder extends Builder
                 }
                 $this->selectSub($column, $as);
             } else {
+                 if($column instanceof Expression){
+                     $this->columns[] = $column;
+                     continue;
+                 }
+
                 if (str_contains($column, '*')){
                     $parts = explode('*', $column);
                     if(count($parts) > 1){

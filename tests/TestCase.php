@@ -3,7 +3,6 @@
 namespace W360\SecureData\Tests;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\DB;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use W360\SecureData\SecureDataServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
