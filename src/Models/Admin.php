@@ -2,7 +2,6 @@
 
 namespace W360\SecureData\Models;
 
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as UserLaravel;
 use W360\SecureData\Casts\Secure;
 use W360\SecureData\Casts\SecureFloat;
@@ -12,7 +11,6 @@ use W360\SecureData\Traits\HasEncryptedFields;
 class Admin extends UserLaravel implements SecureDataEncrypted
 {
     use HasEncryptedFields;
-
 
     /**
      * The attributes that are mass assignable.

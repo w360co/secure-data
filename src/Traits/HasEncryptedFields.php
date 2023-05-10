@@ -52,6 +52,25 @@ trait HasEncryptedFields
         SecureIntUnsigned::class => 'UNSIGNED',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        $encryptType = config('secure-data.encrypt-type');
+        $secretKey = config('secure-data.secret-key');
+
+        if (array_key_exists($encryptType, $this->supportEncryptType)) {
+            throw new Exception(' Encrypt type:' . $encryptType . ' is Invalid');
+        }
+
+        if (empty($secretKey)) {
+            throw new Exception(' Encrypt Secret Key is Invalid');
+        }
+
+        $this->setEncryptType($encryptType);
+        $this->setSecretKey($secretKey);
+
+        parent::__construct($attributes);
+    }
+
     /**
      * @return mixed
      */
@@ -104,11 +123,10 @@ trait HasEncryptedFields
     protected function encapsulateCastType($castType, string $column): string
     {
         if (isset($this->castTypes[$castType]) and $this->castTypes[$castType] !== null) {
-            $column = 'CAST(' . $column . ' AS ' . $this->castTypes[$castType] . ')';
+            $column = 'CAST(' . $column . ' as ' . $this->castTypes[$castType] . ')';
         }
         return $column;
     }
-
 
     /**
      * Get secure encrypt attributes
@@ -120,7 +138,7 @@ trait HasEncryptedFields
     {
         $secureAttributes = [];
         foreach ($this->casts as $key => $type) {
-            if (in_array($type, $this->castTypes)) {
+            if (array_key_exists($type, $this->castTypes)) {
                 $secureAttributes[$key] = $function($key, $type);
             }
         }
@@ -134,8 +152,6 @@ trait HasEncryptedFields
      */
     protected function getSecureColumn($column, \Closure $function)
     {
-        $secretKey = config('secure-data.secret-key');
-        $encryptType = config('secure-data.encrypt-type');
         $table = "";
         $parts = explode(".", $column);
         $as = null;
@@ -179,12 +195,7 @@ trait HasEncryptedFields
         return $this->getSecureAttributes(function ($key, $type) use ($values) {
             if (array_key_exists($key, $values) && !Binary::checkIs($values[$key])) {
                 $column = '"' . $values[$key] . '"';
-                return DB::raw(
-                    $this->encapsulateCastType(
-                        $type,
-                        $this->encapsulateSecureColumn($column)
-                    )
-                );
+                return DB::raw($this->encapsulateSecureColumn($column));
             } elseif (array_key_exists($key, $values) && Binary::checkIs($values[$key])) {
                 return $values[$key];
             }
@@ -209,7 +220,6 @@ trait HasEncryptedFields
         });
     }
 
-
     /**
      * Get secure decrypt attributes
      *
@@ -227,7 +237,6 @@ trait HasEncryptedFields
             );
         });
     }
-
 
     /**
      * prepare column query
@@ -248,10 +257,11 @@ trait HasEncryptedFields
         }
         $column = !empty($table) ? '`' . $table . '`.`' . $key . '`' : '`' . $key . '`';
         return DB::raw(
-            $this->encapsulateCastType(
-                $castType,
-                $this->encapsulateSecureColumn($column, $encryptType)
-            ) . $alias
+            $encryptType === 'ENCRYPT' ? $this->encapsulateSecureColumn($column, $encryptType) . $alias :
+                $this->encapsulateCastType(
+                    $castType,
+                    $this->encapsulateSecureColumn($column, $encryptType)
+                ) . $alias
         );
     }
 
@@ -282,7 +292,6 @@ trait HasEncryptedFields
         });
     }
 
-
     /**
      * Get a new query builder instance for the connection.
      *
@@ -290,20 +299,6 @@ trait HasEncryptedFields
      */
     public function newBaseQueryBuilder()
     {
-        $encryptType = config('secure-data.encrypt-type');
-        $secretKey = config('secure-data.secret-key');
-
-        if (array_key_exists($encryptType, $this->supportEncryptType)) {
-            throw new Exception(' Encrypt type:' . $encryptType . ' is Invalid');
-        }
-
-        if (empty($secretKey)) {
-            throw new Exception(' Encrypt Secret Key is Invalid');
-        }
-
-        $this->setEncryptType($encryptType);
-        $this->setSecretKey($secretKey);
-
         $connection = $this->getConnection();
         return new SecureDataQueryBuilder($connection, $this);
     }
@@ -317,25 +312,5 @@ trait HasEncryptedFields
     {
         return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
     }
-
-    /**
-     * Fill the model with an array of attributes.
-     *
-     * @param array $attributes
-     * @return $this
-     *
-     * @throws \Illuminate\Database\Eloquent\MassAssignmentException
-     */
-    /**    public function fill(array $attributes)
-     * {
-     *
-     * if (method_exists($this, 'getSecureEncryptAttributes') && !empty($attributes)) {
-     * $encript = $this->getSecureEncryptAttributes($attributes);
-     * $attributes = array_merge($attributes, $encript);
-     * }
-     *
-     * return parent::fill($attributes);
-     * } **/
-
 
 }

@@ -2,9 +2,8 @@
 
 namespace W360\SecureData;
 
-use Carbon\CarbonPeriod;
+
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Arr;
@@ -130,11 +129,14 @@ class SecureDataQueryBuilder extends Builder
             }
             $encryptKeys = $this->model->getSecureSelectDecryptAttributes();
             foreach ($columns as $index => $key) {
-                if (array_key_exists($key, $encryptKeys)) {
-                    $columns[$index] = $encryptKeys[$key];
+                if(is_string($key)){
+                    if (array_key_exists($key, $encryptKeys)) {
+                        $columns[$index] = $encryptKeys[$key];
+                    }
                 }
             }
         }
+
         return $columns;
     }
 
@@ -148,6 +150,27 @@ class SecureDataQueryBuilder extends Builder
     {
         $columns = $this->prepareSecureSelectDecrypt($columns);
         return parent::get($columns);
+    }
+
+    /**
+     * Execute an aggregate function on the database.
+     *
+     * @param  string  $function
+     * @param  array  $columns
+     * @return mixed
+     */
+    public function aggregate($function, $columns = ['*'])
+    {
+        $columns = $this->withoutSelectAliases($columns);
+
+        $results = $this->cloneWithout($this->unions || $this->havings ? [] : ['columns'])
+            ->cloneWithoutBindings($this->unions || $this->havings ? [] : ['select'])
+            ->setAggregate($function, $columns)
+            ->get($columns);
+
+        if (! $results->isEmpty()) {
+            return array_change_key_case((array) $results[0])['aggregate'];
+        }
     }
 
     /**
@@ -324,9 +347,12 @@ class SecureDataQueryBuilder extends Builder
     public function insertGetId(array $values, $sequence = null)
     {
         $this->applyBeforeQueryCallbacks();
+
         $values = array_merge($values, $this->model->getSecureEncryptAttributes($values));
+
         $sql = $this->grammar->compileInsertGetId($this, $values, $sequence);
         $values = $this->cleanBindings($values);
+
         return $this->processor->processInsertGetId($this, $sql, $values, $sequence);
     }
 

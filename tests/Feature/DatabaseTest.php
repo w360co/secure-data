@@ -3,6 +3,7 @@
 namespace W360\SecureData\Tests\Feature;
 
 use Faker\Factory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use W360\SecureData\Models\Admin;
 use W360\SecureData\Models\User;
@@ -38,6 +39,12 @@ class DatabaseTest extends TestCase
      * @test
      */
     public function relations_many_to_many_in_database_mysql(){
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
+        Admin::truncate();
+        User::truncate();
+        Web::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
 
         $userName = Factory::create()->firstName;
         $adminName = Factory::create()->firstName;
@@ -156,9 +163,39 @@ class DatabaseTest extends TestCase
      * @test
      */
     public function sum_in_database_mysql(){
-        /**
-         * @TODO test to sum query
-         */
+        $validList = ['11111111', '11111112', '11111113', '11111114'];
+        $noValidList = ['hole', 'history', 'closet'];
+        $insertNames = array_merge($noValidList, $validList);
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
+        Admin::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
+        User::create([
+            'first_name' => '11111111',
+            'last_name' => Factory::create()->lastName,
+            'email' => Factory::create()->email,
+            'identifier' => '198282828',
+            'salary' => '',
+            'status' => true,
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => Str::random(10)
+        ]);
+        foreach ($insertNames as $insertName) {
+            Admin::create([
+                'first_name' => $insertName,
+                'last_name' => Factory::create()->lastName,
+                'email' => Factory::create()->email,
+                'identifier' => '198282828',
+                'salary' => 10001,
+                'status' => true,
+                'email_verified_at' => now(),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'remember_token' => Str::random(10)
+            ]);
+        }
+
+        $admin = Admin::where('first_name', 'LIKE', '111%')->sum('salary');
+        $this->assertEquals(40004, $admin);
     }
 
     /**
