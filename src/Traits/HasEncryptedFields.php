@@ -162,10 +162,8 @@ trait HasEncryptedFields
             }
         }
 
-        if (in_array($encryptType, $this->supportEncryptType)) {
-            if (array_key_exists($key, $castAttributes)) {
-                return $function($secretKey, $encryptType, $key, $table, $as);
-            }
+        if (array_key_exists($key, $castAttributes)) {
+            return $function($key, $table, $as, $castAttributes[$key]);
         }
         return $column;
     }
