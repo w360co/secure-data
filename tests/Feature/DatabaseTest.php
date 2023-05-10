@@ -155,6 +155,15 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
+    public function sum_in_database_mysql(){
+        /**
+         * @TODO test to sum query
+         */
+    }
+
+    /**
+     * @test
+     */
     public function where_between_in_database_mysql(){
         $insertNames = ['Mathilde', 'Granville', 'Jasen', 'Maya', 'Five', 'Six', 'Seven'];
         foreach ($insertNames as $insertName) {

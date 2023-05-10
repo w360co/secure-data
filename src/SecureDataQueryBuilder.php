@@ -13,6 +13,10 @@ use Illuminate\Support\Arr;
 class SecureDataQueryBuilder extends Builder
 {
 
+    /**
+     * current model
+     * @var
+     */
     private $model;
 
     /**
@@ -24,7 +28,6 @@ class SecureDataQueryBuilder extends Builder
         parent::__construct($connection, $connection->getQueryGrammar(), $connection->getPostProcessor());
         $this->model = $model;
     }
-
 
     /**
      * Add a basic where clause to the query.
@@ -52,7 +55,6 @@ class SecureDataQueryBuilder extends Builder
         return parent::where($column, $operator, $value, $boolean);
 
     }
-
 
     /**
      * Add a "where in" clause to the query.
@@ -116,7 +118,6 @@ class SecureDataQueryBuilder extends Builder
         ));
     }
 
-
     /**
      * @param string[] $columns
      * @return string[]
@@ -158,7 +159,7 @@ class SecureDataQueryBuilder extends Builder
      */
     public function pluck($column, $key = null)
     {
-        $newColumn = $this->model->getSecureSelectDecryptAttribute($column);
+        $newColumn = $this->model->getSecureSelectDecryptColumn($column);
         // First, we will need to select the results of the query accounting for the
         // given columns / key. Once we have the results, we will be able to take
         // the results and get the exact data that was requested for the query.
@@ -204,12 +205,11 @@ class SecureDataQueryBuilder extends Builder
         }
 
         $columns = is_array($columns) ? $columns : func_get_args();
-
         foreach ($columns as $as => $column) {
             if (is_string($as) && $this->isQueryable($column)) {
                 $this->selectSub($column, $as);
             } else {
-                $this->columns[] = $this->model->getSecureSelectDecryptAttribute($column);
+                $this->columns[] = $this->model->getSecureSelectDecryptColumn($column);
             }
         }
 
@@ -225,8 +225,6 @@ class SecureDataQueryBuilder extends Builder
     public function addSelect($column)
     {
         $columns = is_array($column) ? $column : func_get_args();
-
-
         foreach ($columns as $as => $column) {
             if (is_string($as) && $this->isQueryable($column)) {
                 if (is_null($this->columns)) {
@@ -245,11 +243,11 @@ class SecureDataQueryBuilder extends Builder
                         $table = $parts[0];
                         $relatedColumns = $this->model->getTableColumns();
                         foreach ($relatedColumns as $related){
-                            $this->columns[] = $this->model->getSecureSelectDecryptAttribute($table.$related." as ".$related);
+                            $this->columns[] = $this->model->getSecureSelectDecryptColumn($table.$related." as ".$related);
                         }
                     }
                 }else {
-                    $this->columns[] = $this->model->getSecureSelectDecryptAttribute($column);
+                    $this->columns[] = $this->model->getSecureSelectDecryptColumn($column);
                 }
             }
         }
@@ -265,7 +263,7 @@ class SecureDataQueryBuilder extends Builder
     protected function withoutSelectAliases(array $columns)
     {
         return array_map(function ($column) {
-            return $this->model->getSecureSelectDecryptAttribute($column, true);
+            return $this->model->getSecureSelectDecryptColumn($column, true);
         }, $columns);
     }
 
@@ -277,17 +275,13 @@ class SecureDataQueryBuilder extends Builder
     public function distinct()
     {
         $columns = func_get_args();
-
         if (count($columns) > 0) {
             $this->distinct = is_array($columns[0]) || is_bool($columns[0]) ? $columns[0] : $columns;
         } else {
             $this->distinct = true;
         }
-
         return $this;
     }
-
-
 
     /**
      * Add an "order by" clause to the query.
@@ -303,20 +297,17 @@ class SecureDataQueryBuilder extends Builder
 
         if ($this->isQueryable($column)) {
             [$query, $bindings] = $this->createSub($column);
-
             $column = new Expression('('.$query.')');
-
             $this->addBinding($bindings, $this->unions ? 'unionOrder' : 'order');
         }
 
         $direction = strtolower($direction);
-
         if (! in_array($direction, ['asc', 'desc'], true)) {
             throw new \InvalidArgumentException('Order direction must be "asc" or "desc".');
         }
 
         $this->{$this->unions ? 'unionOrders' : 'orders'}[] = [
-            'column' => $this->model->getSecureSelectDecryptAttribute($column, true),
+            'column' => $this->model->getSecureSelectDecryptColumn($column, true),
             'direction' => $direction,
         ];
 
@@ -332,19 +323,12 @@ class SecureDataQueryBuilder extends Builder
      */
     public function insertGetId(array $values, $sequence = null)
     {
-
         $this->applyBeforeQueryCallbacks();
-
         $values = array_merge($values, $this->model->getSecureEncryptAttributes($values));
-
         $sql = $this->grammar->compileInsertGetId($this, $values, $sequence);
-
         $values = $this->cleanBindings($values);
-
         return $this->processor->processInsertGetId($this, $sql, $values, $sequence);
     }
-
-
 
     /**
      * Add a "group by" clause to the query.
@@ -355,7 +339,7 @@ class SecureDataQueryBuilder extends Builder
     public function groupBy(...$groups)
     {
         foreach ($groups as $group) {
-            $group = $this->model->getSecureSelectDecryptAttribute($group, true);
+            $group = $this->model->getSecureSelectDecryptColumn($group, true);
             $this->groups = array_merge(
                 (array) $this->groups,
                 Arr::wrap($group)
@@ -363,15 +347,5 @@ class SecureDataQueryBuilder extends Builder
         }
         return $this;
     }
-
-
-
-
-
-
-
-
-
-
 
 }

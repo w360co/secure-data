@@ -5,6 +5,7 @@ namespace W360\SecureData\Models;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as UserLaravel;
 use W360\SecureData\Casts\Secure;
+use W360\SecureData\Casts\SecureFloat;
 use W360\SecureData\Contracts\SecureDataEncrypted;
 use W360\SecureData\Traits\HasEncryptedFields;
 
@@ -50,7 +51,7 @@ class Admin extends UserLaravel implements SecureDataEncrypted
         'identifier' => Secure::class,
         'first_name' => Secure::class,
         'last_name' => Secure::class,
-        'salary' => Secure::class,
+        'salary' => SecureFloat::class,
         'status' => Secure::class,
     ];
 
