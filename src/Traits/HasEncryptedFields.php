@@ -295,7 +295,7 @@ trait HasEncryptedFields
         $encryptType = config('secure-data.encrypt-type');
         $secretKey = config('secure-data.secret-key');
 
-        if (in_array($encryptType, $this->supportEncryptType)) {
+        if (array_key_exists($encryptType, $this->supportEncryptType)) {
             throw new Exception(' Encrypt type:' . $encryptType . ' is Invalid');
         }
 
