@@ -107,7 +107,7 @@ class SecureDataQueryBuilder extends Builder
         $this->applyBeforeQueryCallbacks();
 
         $values = array_filter(array_merge($values, $this->model->getSecureEncryptAttributes($values)), function ($item){
-             return !empty($item);
+             return !empty($item) or $item === 0;
         });
 
         $sql = $this->grammar->compileUpdate($this, $values);
