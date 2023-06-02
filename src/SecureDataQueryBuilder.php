@@ -52,11 +52,11 @@ class SecureDataQueryBuilder extends Builder
     }
 
     /**
-     * Get a new instance of the query builder.
+     * Create a new query instance for nested where condition.
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    public function newQuery()
+    public function forNestedWhere()
     {
         return $this->model->newBaseQueryBuilder();
     }
