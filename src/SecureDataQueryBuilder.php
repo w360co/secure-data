@@ -39,20 +39,26 @@ class SecureDataQueryBuilder extends Builder
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-
         if (is_array($column)) {
             return $this->addArrayOfWheres($column, $boolean);
         }
-
         if (method_exists($this->model, 'getSecureDecryptAttributes')) {
             $attributes = $this->model->getSecureDecryptAttributes();
             if (array_key_exists($column, $attributes)) {
                 $column = $attributes[$column];
             }
         }
-
         return parent::where($column, $operator, $value, $boolean);
+    }
 
+    /**
+     * Get a new instance of the query builder.
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function newQuery()
+    {
+        return $this->model->newBaseQueryBuilder();
     }
 
     /**

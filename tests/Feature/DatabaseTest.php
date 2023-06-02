@@ -16,7 +16,8 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function create_and_get_database_mysql(){
+    public function create_and_get_database_mysql()
+    {
 
         $name = Factory::create()->firstName;
         User::create([
@@ -38,7 +39,8 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function relations_many_to_many_in_database_mysql(){
+    public function relations_many_to_many_in_database_mysql()
+    {
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
         Admin::truncate();
@@ -92,7 +94,44 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function create_in_database_mysql(){
+    public function relations_first_or_create_in_database_mysql()
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
+        Admin::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
+        $ids = [];
+        for ($i = 0; $i <= 2; $i++) {
+            $user = Admin::firstOrCreate(
+                [
+                    'first_name' => 'ismyname',
+                    'email' => 'elbert@tl.com',
+                ],
+                [
+                    'first_name' => 'ismyname',
+                    'email' => 'elbert@tl.com',
+                    'last_name' => Factory::create()->lastName,
+                    'identifier' => '110101001',
+                    'salary' => Factory::create()->randomFloat(10),
+                    'status' => true,
+                    'email_verified_at' => now(),
+                    'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                    'remember_token' => Str::random(10)
+                ]
+            );
+            $ids[] = $user->id;
+        }
+        if (count($ids) > 1) {
+            $this->assertEquals($ids[0], $ids[1]);
+        } else {
+            $this->assertTrue(false);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function create_in_database_mysql()
+    {
 
         $adminName = Factory::create()->firstName;
 
@@ -115,7 +154,8 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function where_like_model_in_database_mysql(){
+    public function where_like_model_in_database_mysql()
+    {
 
         User::create([
             'first_name' => 'T00000',
@@ -129,14 +169,15 @@ class DatabaseTest extends TestCase
             'remember_token' => Str::random(10)
         ]);
 
-        $object = User::where('first_name','LIKE', 'T0%')->first();
+        $object = User::where('first_name', 'LIKE', 'T0%')->first();
         $this->assertEquals($object->first_name, 'T00000');
     }
 
     /**
      * @test
      */
-    public function where_and_pluck_in_database_mysql(){
+    public function where_and_pluck_in_database_mysql()
+    {
         $validList = ['11111111', '11111112', '11111113', '11111114'];
         $noValidList = ['hole', 'history', 'closet'];
         $insertNames = array_merge($noValidList, $validList);
@@ -146,7 +187,7 @@ class DatabaseTest extends TestCase
                 'last_name' => Factory::create()->lastName,
                 'email' => Factory::create()->email,
                 'identifier' => '198282828',
-                  'salary' => Factory::create()->randomFloat(10),
+                'salary' => Factory::create()->randomFloat(10),
                 'status' => true,
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -154,7 +195,7 @@ class DatabaseTest extends TestCase
             ]);
         }
 
-        $admin = Admin::where('first_name','LIKE', '111111%')->groupBy('first_name')->pluck('first_name');
+        $admin = Admin::where('first_name', 'LIKE', '111111%')->groupBy('first_name')->pluck('first_name');
         $array = $admin->toArray();
         $this->assertEquals($validList, $array);
     }
@@ -162,7 +203,8 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function sum_in_database_mysql(){
+    public function sum_in_database_mysql()
+    {
         $validList = ['11111111', '11111112', '11111113', '11111114'];
         $noValidList = ['hole', 'history', 'closet'];
         $insertNames = array_merge($noValidList, $validList);
@@ -201,7 +243,8 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function where_between_in_database_mysql(){
+    public function where_between_in_database_mysql()
+    {
         $insertNames = ['Mathilde', 'Granville', 'Jasen', 'Maya', 'Five', 'Six', 'Seven'];
         foreach ($insertNames as $insertName) {
             Admin::create([
@@ -217,14 +260,15 @@ class DatabaseTest extends TestCase
             ]);
         }
 
-        $admins = Admin::whereBetween('id',[1,5])->get();
+        $admins = Admin::whereBetween('id', [1, 5])->get();
         $this->assertCount(5, $admins);
     }
 
     /**
      * @test
      */
-    public function pagination_in_database_mysql(){
+    public function pagination_in_database_mysql()
+    {
         $insertNames = ['Mathilde', 'Granville', 'Jasen', 'Maya', 'Five', 'Six', 'Seven'];
         foreach ($insertNames as $insertName) {
             Admin::create([
@@ -246,7 +290,8 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
-    public function update_model_in_database_mysql(){
+    public function update_model_in_database_mysql()
+    {
 
         $user = User::first();
         $insertName = 'UpdateNameMsql';
