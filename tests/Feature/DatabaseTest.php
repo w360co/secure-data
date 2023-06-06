@@ -203,6 +203,36 @@ class DatabaseTest extends TestCase
     /**
      * @test
      */
+    public function select_sum_in_database_mysql()
+    {
+        $validList = ['11111111', '11111112', '11111113', '11111114'];
+        $noValidList = ['hole', 'history', 'closet'];
+        $insertNames = array_merge($noValidList, $validList);
+        foreach ($insertNames as $insertName) {
+            Admin::create([
+                'first_name' => $insertName,
+                'last_name' => Factory::create()->lastName,
+                'email' => Factory::create()->email,
+                'identifier' => '198282828',
+                'salary' => 10000000,
+                'status' => true,
+                'email_verified_at' => now(),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'remember_token' => Str::random(10)
+            ]);
+        }
+        $admins = Admin::groupBy('first_name')->selectSum(['identifier', 'salary'])->get();
+        foreach ($admins as $admin) {
+            echo $admin->total_identifier . "\n";
+            echo $admin->total_salary;
+            $this->assertTrue(isset($admin->total_salary) && $admin->total_salary > 0);
+            $this->assertTrue(isset($admin->total_identifier) && $admin->total_identifier > 0);
+        }
+    }
+
+    /**
+     * @test
+     */
     public function sum_in_database_mysql()
     {
         $validList = ['11111111', '11111112', '11111113', '11111114'];

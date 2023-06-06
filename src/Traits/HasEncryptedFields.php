@@ -313,4 +313,28 @@ trait HasEncryptedFields
         return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
     }
 
+    protected function encapsulateSum(string $column, string $as): string
+    {
+        return 'SUM(' . $column .') as '. $as;
+    }
+
+    public function scopeSelectSum($query, $columns)
+    {
+        if(!is_array($columns)){
+            $columns = [$columns];
+        }
+        $queries = null;
+        foreach ($columns as $column) {
+            $queries = $query->selectRaw(
+                 $this->encapsulateSum(
+                    $this->encapsulateCastType(
+                        SecureFloat::class,
+                        $this->encapsulateSecureColumn($column, 'DECRYPT')
+                    ), 'total_' . $column
+                )
+            );
+        }
+        return $queries;
+    }
+
 }
